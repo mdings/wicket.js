@@ -1,0 +1,27 @@
+{
+  "name": "hatch.js",
+  "version": "0.0.1",
+  "description": "JS sliding panels",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rm -rf dist && mkdir dist",
+    "build": "watchify -v -t babelify src/Wicket.js -o dist/wicket.js",
+    "preoptimize": "browserify -t babelify src/Wicket.js -o dist/wicket.js",
+    "optimize": "uglifyjs dist/wicket.js > dist/wicket.min.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.7.7",
+    "babel-plugin-transform-es2015-modules-umd": "^6.6.5",
+    "babel-preset-es2015": "^6.6.0",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "uglify-js": "^2.6.2",
+    "watchify": "^3.7.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "impetus": "git+https://github.com/timothyallan/impetus.git"
+  }
+}
