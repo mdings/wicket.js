@@ -1,6 +1,6 @@
 {
-  "name": "hatch.js",
-  "version": "0.0.1",
+  "name": "wicket.js",
+  "version": "0.1.0",
   "description": "JS sliding panels",
   "main": "index.js",
   "scripts": {
