@@ -1,0 +1,119 @@
+@font-face {
+  font-family: Vollkorn;
+  font-style: italic;
+  font-weight: 400;
+  src: local("Vollkorn Italic"),local(Vollkorn-Italic),url(//fonts.gstatic.com/s/vollkorn/v6/Oiz0tNwvC-Nd29SBQWfWTFQlYEbsez9cZjKsNMjLOwM.eot?#) format("eot"),url(//fonts.gstatic.com/s/vollkorn/v6/Oiz0tNwvC-Nd29SBQWfWTPk_vArhqVIZ0nv9q090hN8.woff2) format("woff2"),url(//fonts.gstatic.com/s/vollkorn/v6/Oiz0tNwvC-Nd29SBQWfWTBsxEYwM7FgeyaSgU71cLG0.woff) format("woff"); }
+
+@font-face {
+  font-family: Vollkorn;
+  font-style: italic;
+  font-weight: 700;
+  src: local("Vollkorn Bold Italic"),local(Vollkorn-BoldItalic),url(//fonts.gstatic.com/s/vollkorn/v6/KNiAlx6phRqXCwnZZG51JGzklk6MJbhg7BmBP42CjCQ.eot?#) format("eot"),url(//fonts.gstatic.com/s/vollkorn/v6/KNiAlx6phRqXCwnZZG51JIWiMMZ7xLd792ULpGE4W_Y.woff2) format("woff2"),url(//fonts.gstatic.com/s/vollkorn/v6/KNiAlx6phRqXCwnZZG51JAFhaRv2pGgT5Kf0An0s4MM.woff) format("woff"); }
+
+@font-face {
+  font-family: Vollkorn;
+  font-style: normal;
+  font-weight: 400;
+  src: local("Vollkorn Regular"),local(Vollkorn-Regular),url(//fonts.gstatic.com/s/vollkorn/v6/rzvoOTOZcQfVDoKuaB7mVvesZW2xOQ-xsNqO47m55DA.eot?#) format("eot"),url(//fonts.gstatic.com/s/vollkorn/v6/idGKtgpe38okB6bfeHMsLPesZW2xOQ-xsNqO47m55DA.woff2) format("woff2"),url(//fonts.gstatic.com/s/vollkorn/v6/BCFBp4rt5gxxFrX6F12DKvesZW2xOQ-xsNqO47m55DA.woff) format("woff"); }
+
+@font-face {
+  font-family: Vollkorn;
+  font-style: normal;
+  font-weight: 700;
+  src: local("Vollkorn Bold"),local(Vollkorn-Bold),url(//fonts.gstatic.com/s/vollkorn/v6/wMZpbUtcCo9GUabw9JODemfQcKutQXcIrRfyR5jdjY8.eot?#) format("eot"),url(//fonts.gstatic.com/s/vollkorn/v6/wMZpbUtcCo9GUabw9JODeo4P5ICox8Kq3LLUNMylGO4.woff2) format("woff2"),url(//fonts.gstatic.com/s/vollkorn/v6/wMZpbUtcCo9GUabw9JODeobN6UDyHWBl620a-IRfuBk.woff) format("woff"); }
+
+@font-face {
+  font-family: sans-serif;
+  font-style: italic;
+  font-weight: 300;
+  src: local("Helvetica Neue Light Italic"),local(HelveticaNeue-LightItalic),local("Helvetica Light Oblique"),local(Helvetica-LightOblique); }
+
+@font-face {
+  font-family: sans-serif;
+  font-style: italic;
+  font-weight: 400;
+  src: local("Helvetica Neue Italic"),local(HelveticaNeue-Italic),local("Helvetica Oblique"),local(Helvetica-Oblique); }
+
+@font-face {
+  font-family: sans-serif;
+  font-style: italic;
+  font-weight: 700;
+  src: local("Helvetica Neue Bold Italic"),local(HelveticaNeue-BoldItalic),local("Helvetica Bold Oblique"),local(Helvetica-BoldOblique); }
+
+@font-face {
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  src: local("Helvetica Neue Light"),local(HelveticaNeue-Light),local("Helvetica Light"),local(Helvetica-Light); }
+
+@font-face {
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  src: local(HelveticaNeue),local(Helvetica); }
+
+@font-face {
+  font-family: sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  src: local("Helvetica Neue Bold"),local(HelveticaNeue-Bold),local("Helvetica Bold"),local(Helvetica-Bold); }
+
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border: 0; }
+
+html,
+body {
+  font-family: sans-serif;
+  line-height: 1.5;
+  font-size: 18px; }
+
+.row {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center; }
+
+.page__panel {
+  width: 100%;
+  padding: 80px 0; }
+
+.page__panel-intro {
+  color: #fff;
+  background: #F33535; }
+
+.page__panel-demo {
+  height: 75vh;
+  background-color: #D8E9F0; }
+
+.page__panel-usage {
+  background-color: #33425B;
+  min-height: 100vh; }
+
+.page__panel-credits {
+  background-color: #29252C;
+  bottom: 0; }
+
+/*
+Typography */
+h1 {
+  font-weight: 400;
+  font-family: 'Vollkorn', serif; }
+  h1 span {
+    display: block;
+    line-height: 1.1; }
+    h1 span:nth-child(1) {
+      font-size: 75px;
+      letter-spacing: -1px; }
+    h1 span:nth-child(2) {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 2px;
+      background: #aa2525;
+      font-size: 20px; }
+  h1 + * {
+    margin-top: 40px; }

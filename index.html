@@ -1,1 +1,51 @@
-Hello World
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Wicket.js | JS Sliding panels</title>
+    <link rel="stylesheet" href="main.css">
+  </head>
+  <body>
+
+    <div class="page__panel page__panel-intro">
+      <div class="row">
+        <h1>
+          <span>Wicket.js</span>
+          <!-- <span>Js sliding panels</span> -->
+        </h1>
+        <p>
+          Wicketjs is a tiny javascript plugin to create the sliding panel effect as demonstrated on this website. Also works on touch devices. Supported by evergreen browsers.
+        </p>
+      </div>
+    </div>
+
+    <div class="page__panel page__panel-demo">
+      <div class="row">
+        <p>
+          This section is used for demo purposes
+        </p>
+      </div>
+    </div>
+
+    <div class="page__panel page__panel-usage">
+      <div class="row">
+        Usage
+      </div>
+    </div>
+
+    <div class="page__panel page__panel-credits">
+      <div class="row">
+        Credits
+      </div>
+    </div>
+
+
+
+    <script src="wicket.min.js"></script>
+    <script>
+    window.onload = function() {
+        new Wicket('.page__panel');
+    }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "wicketjs-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "sass": "node-sass scss/main.scss main.css | postcss --use autoprefixer --use postcss-font-magician -o main.css main.css",
+    "watch": "nodemon -e scss -x 'npm run sass'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdings/wicket.js.git"
+  },
+  "author": "Maarten Dings",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mdings/wicket.js/issues"
+  },
+  "homepage": "https://github.com/mdings/wicket.js#readme",
+  "devDependencies": {
+    "node-sass": "^3.5.3",
+    "nodemon": "^1.9.1",
+    "postcss-cli": "^2.5.2",
+    "postcss-font-magician": "^1.4.0"
+  }
+}
