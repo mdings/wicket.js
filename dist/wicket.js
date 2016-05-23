@@ -477,16 +477,19 @@
 
       // global vars
       this.hatches = document.querySelectorAll(elm);
+      this.impetus = null;
       this.scrollPoints = [];
       this.interval = false;
       this.is_init = false;
       this.scroller = null;
       this.index = 0;
+      this.scrollOffset = 0;
       this.lastScrollTop = 0;
 
       // defaults
       var defaults = {
-        'touch': true
+        'touch': true,
+        'change': null
       };
 
       // create options by extending defaults with the passed in arugments
@@ -510,22 +513,66 @@
         var _this = this;
 
         if (!is_touch_device() && !this.interval) {
-          this.interval = setInterval(function () {
-            return _this.handleScroll();
-          }, 20);
+          (function () {
+            var repeatOften = function repeatOften() {
+              _this.handleScroll();
+              _this.interval = requestAnimationFrame(repeatOften);
+            };
+            repeatOften();
+          })();
         } else {
           if (this.options.touch === true) {
             // calculate outer bounds
+            // this.interval = setInterval(() => this.handleScroll(), 20);
             var h = (parseInt(this.scroller.style.height) - window.innerHeight) * -1;
-            new Impetus({
-              source: document.querySelector('body'),
-              multiplier: 1.3,
+            this.impetus = new Impetus({
+              source: document.body,
+              multiplier: 1.5,
               boundY: [h, 0],
               update: function update(x, y) {
                 _this.handleScroll('touch', y);
               }
             });
           }
+        }
+      }
+    }, {
+      key: 'handleScroll',
+      value: function handleScroll(event, offset) {
+        // incoming offset should be negative
+        offset = offset == 0 ? -0.001 : offset;
+        var nOffset = offset || window.scrollY * -1;
+        var hatch = this.hatches[this.index];
+        var scrollOffset = nOffset + this.scrollPoints[this.index];
+        var oIndex = this.index;
+        translateY(hatch, scrollOffset);
+
+        // keep track of the current scrollOffset
+        this.scrollOffset = nOffset;
+
+        // force element repaint on touch devices
+        if (is_touch_device() && !hatch.dataset.haspaint) {
+          hatch.style.display = 'none';
+          hatch.offsetHeight; // no need to store this anywhere, the reference is enough
+          hatch.style.display = '';
+          hatch.dataset.haspaint = 'yes';
+        }
+
+        if (nOffset * -1 > this.scrollPoints[this.index + 1]) {
+          this.index++;
+          this.index = Math.min(this.index, this.hatches.length - 1);
+          this.callChangeCallback();
+        }
+
+        if (nOffset * -1 < this.scrollPoints[this.index]) {
+          // make all the panels hard snap to the top, except the first one, which may bounce
+          if (this.index > 0) {
+            translateY(hatch, 0);
+          }
+
+          this.index--;
+          this.index = Math.max(0, this.index);
+          this.callChangeCallback();
         }
       }
     }, {
@@ -559,6 +606,14 @@
         this.scroller.style.height = this.scrollPoints[this.scrollPoints.length - 1] + 'px';
       }
     }, {
+      key: 'callChangeCallback',
+      value: function callChangeCallback() {
+        var getType = {};
+        if (this.options.change && getType.toString.call(this.options.change) === '[object Function]') {
+          this.options.change.call(this, this.index);
+        }
+      }
+    }, {
       key: 'createScroller',
       value: function createScroller() {
         this.scroller = document.createElement('div');
@@ -573,44 +628,12 @@
           clearInterval(this.interval);
           this.interval = false;
           this.is_init = false;
+          if (this.impetus) {
+            this.impetus.pause();
+          }
           window.removeEventListener('resize', this.listener);
           window.removeEventListener('scroll', this.listener);
           this.resetScreens();
-        }
-      }
-    }, {
-      key: 'handleScroll',
-      value: function handleScroll(event, offset) {
-        var nOffset = offset || window.pageYOffset * -1;
-        var hatch = this.hatches[this.index];
-        var scrollOffset = nOffset + this.scrollPoints[this.index];
-        hatch.style['transform'] = 'translate3d(0px,' + scrollOffset + 'px,0px)';
-        hatch.style['-ms-transform'] = 'translate3d(0px,' + scrollOffset + 'px,0px)';
-        hatch.style['-webkit-transform'] = 'translate3d(0px,' + scrollOffset + 'px,0px)';
-
-        // force element repaint on touch devices
-        if (is_touch_device() && !hatch.dataset.haspaint) {
-          hatch.style.display = 'none';
-          hatch.offsetHeight; // no need to store this anywhere, the reference is enough
-          hatch.style.display = '';
-          hatch.dataset.haspaint = 'yes';
-        }
-
-        if (nOffset * -1 > this.scrollPoints[this.index + 1]) {
-          this.index++;
-          this.index = Math.min(this.index, this.hatches.length - 2);
-        }
-
-        if (nOffset * -1 < this.scrollPoints[this.index]) {
-          // make all the panels hard snap to the top, except the first one, which may bounce
-          if (this.index > 0) {
-            hatch.style['transform'] = 'translate3d(0px,0px,0px)';
-            hatch.style['-ms-transform'] = 'translate3d(0px,0px,0px)';
-            hatch.style['-webkit-transform'] = 'translate3d(0px,0px,0px)';
-          }
-
-          this.index--;
-          this.index = Math.max(0, this.index);
         }
       }
     }, {
@@ -635,6 +658,10 @@
           this.calcScrollPoints();
           this.bindListeners();
           this.bindEvents();
+          this.callChangeCallback();
+          if (this.impetus) {
+            this.impetus.resume();
+          }
           this.is_init = true;
         }
       }
@@ -651,10 +678,85 @@
         }
         document.body.removeChild(this.scroller);
       }
+    }, {
+      key: 'scrollTo',
+      value: function scrollTo(id) {
+        var _this3 = this;
+
+        var interval = void 0;
+        var elm = document.querySelector(id);
+        var nodeList = Array.prototype.slice.call(elm.parentNode.children);
+        var index = nodeList.indexOf(elm);
+
+        if (interval) clearInterval(interval); // clear the interval when there is one set
+
+        // update index value
+        this.index = index;
+
+        var start = this.scrollOffset;
+        var end = this.scrollPoints[index] * -1;
+        var delta = start;
+        var scrollSpeed = 55;
+
+        if (!is_touch_device()) {
+          (function () {
+            var time = 350;
+            var start = new Date().getTime();
+            var interval = setInterval(function () {
+              var step = Math.min(1, (new Date().getTime() - start) / time);
+              document.body.scrollTop = window.pageYOffset + step * (end * -1 - window.pageYOffset);
+              if (step == 1) clearInterval(interval);
+            }, scrollSpeed);
+            document.body.scrollTop = window.pageYOffset;
+          })();
+        } else {
+          (function () {
+            var interval = setInterval(function () {
+
+              if (start < end) {
+                if (delta >= end) clearInterval(interval);
+                delta = parseFloat(Math.min(delta += scrollSpeed, end)) + 0.001;
+              } else {
+                if (delta <= end) clearInterval(interval);
+                delta = parseFloat(Math.max(delta -= scrollSpeed, end)) - 0.001;
+              }
+
+              // scroll to panel
+              _this3.handleScroll('touch', delta);
+
+              // update impetus values
+              if (_this3.impetus) {
+                _this3.impetus.setValues(0, end);
+              }
+            }, 10);
+          })();
+        }
+      }
+    }, {
+      key: 'setValues',
+      value: function setValues(x, y) {
+        this.impetus.setValues(x, y);
+      }
     }]);
 
     return Wicket;
   }();
+
+  var translateY = function translateY(obj, val) {
+    obj.style['transform'] = 'translate3d(0px,' + val + 'px,0px)';
+    obj.style['-ms-transform'] = 'translate3d(0px,' + val + 'px,0px)';
+    obj.style['-webkit-transform'] = 'translate3d(0px,' + val + 'px,0px)';
+  };
+
+  var extendDefaults = function extendDefaults(source, properties) {
+    var property;
+    for (property in properties) {
+      if (properties.hasOwnProperty(property)) {
+        source[property] = properties[property];
+      }
+    }
+    return source;
+  };
 
   var log = function log(msg) {
     if (window.console && window.console.error) {
@@ -664,6 +766,13 @@
 
   var is_touch_device = function is_touch_device() {
     return 'ontouchstart' in window || navigator.MaxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+  };
+
+  // requestAnimationFrame for Smart Animating http://goo.gl/sx5sts
+  var requestAnimFrame = function requestAnimFrame() {
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
+      window.setTimeout(callback, 1000 / 60);
+    };
   };
 
   global.Wicket = module.exports = Wicket;
